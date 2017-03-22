@@ -1,0 +1,18 @@
+.background {
+	fill: #fffff8;
+  }
+.statemachine {
+	stroke-width: 1.5;
+	stroke: #111111;
+	rx: 20;
+	ry: 20;
+}
+.stateconnectors {
+	stroke-width: 1.5;
+}
+.analytical {
+	font-family: "Gill Sans";
+    font-size: 15px;
+    text-anchor: start;
+    fill: #111111;
+}
