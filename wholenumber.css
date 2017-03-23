@@ -13,6 +13,20 @@
 .analytical {
 	font-family: "Gill Sans";
     font-size: 15px;
-    text-anchor: start;
-    fill: #111111;
+    text-anchor: center;
 }
+.analytical.inp {
+	fill: #ca0020;
+}
+.analytical.op {
+	fill: #0571b0;
+}
+/*.graphical.inp{
+	font-family: "Gill Sans";
+    font-size: 15px;
+}
+.graphical.inp.tick{
+	shape-rendering: crispEdges;
+	stroke: #ca0020;
+	fill: none;
+}*/
