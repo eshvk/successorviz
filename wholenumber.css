@@ -42,3 +42,7 @@
       stroke-width: 50px;
       cursor: crosshair;
   }
+#graphpath {
+	stroke-width: 1.5;
+	stroke: #111111;
+}
