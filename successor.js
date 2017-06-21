@@ -16,7 +16,7 @@ var statemachine = function(bg, w, h, padding) {
         var inpStartY, opStartY;
         var g = bg
             .append('g')
-            .attr('transform', 'translate(' + (2 * w / 3 + 3*padding)   + ',' + h/12 + ')')
+            .attr('transform', 'translate(' + (w / 9 + 3*padding)   + ',' + (h/3 - 2*padding) + ')')
         var machine = g
             .append('rect')
             .attr('class', 'statemachine')
@@ -24,13 +24,13 @@ var statemachine = function(bg, w, h, padding) {
             .attr('height', w / 10)
             .attr('x', -w / 20)
             .attr('y', padding);
-        d3.xml('fofx.svg', function(e, docFragment) {
+        d3.xml('sofx.svg', function(e, docFragment) {
             // Based on https://bl.ocks.org/mbostock/1014829
             if (e) { console.log(e);
                 return; }
             g.node().appendChild(docFragment.documentElement);
             g
-            .select('#fofx')
+            .select('#sofx')
             .attr('x', 0 - padding)
             .attr('y', padding + w/30)
         })
@@ -87,13 +87,13 @@ var analyticalform = function(bg, w, h) {
     var inpStartY, opStartY;
     var txt = bg
         .append('text')
-        .attr('transform', 'translate(' + w/9 + ',' + (h/2 - 3*padding)   + ')')
+        .attr('transform', 'translate(' + w/9 + ',' + (2*h/3 - 3*padding)   + ')')
         .attr('class', 'analytical')
         .attr('x', padding)
-        .attr('y', 0)
+        .attr('y', inpVal)
         .attr('fill', '#111111');
     txt.append('tspan')
-        .text('f(x) = x + 1')
+        .text('S(x) = x + 1')
     var opS = txt
         .append('tspan')
         .text(inpVal + 1)
@@ -135,11 +135,11 @@ var graphicalform = function(bg, w, h) {
     var numberLineX = d3
         .axisBottom()
         .scale(xGraphScale)
-        .tickValues([0, 25, 50, 75, 100]);
+        .tickValues([minX, 25, 50, 75, 100]);
     var numberLineY = d3
         .axisLeft()
         .scale(yGraphScale)
-        .tickValues([0, 25, 50, 75, 100]);
+        .tickValues([minX, 25, 50, 75, 101]);
     var chart =  bg
     	.append('g')
     	.attr('transform', 'translate(' + w/3 + ',' + (2*h/3) + ')');
@@ -152,15 +152,15 @@ var graphicalform = function(bg, w, h) {
     chart
         .append('line')
         .attr('id', 'graphpath')
-        .attr('x1', function(d) {return xGraphScale(0)})
-        .attr('y1', function(d) {return yGraphScale(1)})
+        .attr('x1', function(d) {return xGraphScale(minX)})
+        .attr('y1', function(d) {return yGraphScale(minX+1)})
         .attr('x2', function(d) {return xGraphScale(inpVal)})
         .attr('y2', function(d) {return yGraphScale(inpVal + 1)});
 }
 
 // Animate
 var animations = function(length) {
-    inpVal = Math.max(inpVal + Math.floor(length), 0);
+    inpVal = Math.min(Math.max(inpVal + Math.floor(length), minX), maxX);
     d3.select('#analyticalop')
     .text(inpVal + 1);
     d3.select('#analyticalinp')
@@ -179,15 +179,17 @@ var w = 900,
     h = 600; // 3:2 aspect ratio
 var padding = 20;
 var bg = background(w, h);
-var inpVal = 0;
+var minX = 1
+var maxX = 100
+var inpVal = minX;
 var xGraphScale = d3
     .scalePoint()
-    .domain(range(0, 100))
+    .domain(range(minX, maxX))
     .range([0, 2*h/5]);
 var yGraphScale = d3
     .scalePoint()
-        .domain(range(0, 101))
-        .range([0, -2*h/5]);
+    .domain(range(minX+1, maxX+1))
+    .range([0, -2*h/5]);
 statemachine(bg, w, h, padding);
 graphicalform(bg, w, h);
 analyticalform(bg, w, h);
