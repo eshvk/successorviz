@@ -135,11 +135,11 @@ var graphicalform = function(bg, w, h) {
     var numberLineX = d3
         .axisBottom()
         .scale(xGraphScale)
-        .tickValues([minX, 25, 50, 75, 100]);
+        .tickValues([axisMin, 25, 50, 75, axisMax]);
     var numberLineY = d3
         .axisLeft()
         .scale(yGraphScale)
-        .tickValues([minX, 25, 50, 75, 101]);
+        .tickValues([axisMin, 25, 50, 75, axisMax]);
     var chart =  bg
     	.append('g')
     	.attr('transform', 'translate(' + w/3 + ',' + (2*h/3) + ')');
@@ -152,15 +152,15 @@ var graphicalform = function(bg, w, h) {
     chart
         .append('line')
         .attr('id', 'graphpath')
-        .attr('x1', function(d) {return xGraphScale(minX)})
-        .attr('y1', function(d) {return yGraphScale(minX+1)})
+        .attr('x1', function(d) {return xGraphScale(startInput)})
+        .attr('y1', function(d) {return yGraphScale(startInput+1)})
         .attr('x2', function(d) {return xGraphScale(inpVal)})
         .attr('y2', function(d) {return yGraphScale(inpVal + 1)});
 }
 
 // Animate
 var animations = function(length) {
-    inpVal = Math.min(Math.max(inpVal + Math.floor(length), minX), maxX);
+    inpVal = Math.min(Math.max(inpVal + Math.floor(length), startInput), maxInput);
     d3.select('#analyticalop')
     .text(inpVal + 1);
     d3.select('#analyticalinp')
@@ -170,8 +170,8 @@ var animations = function(length) {
     d3.select('#sminp')
     .text(inpVal);
     d3.select('#graphpath')
-    .attr('x2', xGraphScale(Math.min(inpVal, 100)))
-    .attr('y2', yGraphScale(Math.min(inpVal, 100) + 1));
+    .attr('x2', xGraphScale(inpVal))
+    .attr('y2', yGraphScale(inpVal + 1));
 
 }
 
@@ -179,16 +179,18 @@ var w = 900,
     h = 600; // 3:2 aspect ratio
 var padding = 20;
 var bg = background(w, h);
-var minX = 1
-var maxX = 100
-var inpVal = minX;
+var startInput = 1
+var maxInput = 90 // Must be less than axisMax
+var axisMin = 1
+var axisMax = 100
+var inpVal = startInput;
 var xGraphScale = d3
     .scalePoint()
-    .domain(range(minX, maxX))
+    .domain(range(axisMin, axisMax))
     .range([0, 2*h/5]);
 var yGraphScale = d3
     .scalePoint()
-    .domain(range(minX+1, maxX+1))
+    .domain(range(axisMin, axisMax))
     .range([0, -2*h/5]);
 statemachine(bg, w, h, padding);
 graphicalform(bg, w, h);
